@@ -1,0 +1,118 @@
+{
+  "custom_headers": {
+    "X-Debug-Label": "local-test"
+  },
+  "request_modifiers": [
+    {
+      "match_url": [
+        "https://example.invalid/api/v1/demo"
+      ],
+      "match_method": [
+        "POST"
+      ],
+      "scheme": "https",
+      "host": "staging.example.invalid",
+      "port": 8443,
+      "host_header": "api.staging.example.invalid",
+      "path_replace": {
+        "from": "/api/v1/",
+        "to": "/api/v2/"
+      },
+      "query": {
+        "debug": "1",
+        "tag": [
+          "alpha",
+          "beta"
+        ]
+      },
+      "remove_query": [
+        "legacy"
+      ],
+      "headers": {
+        "X-Request-Rewrite": "enabled"
+      },
+      "remove_headers": [
+        "X-Deprecated"
+      ],
+      "cookies": {
+        "env": "staging"
+      },
+      "remove_cookies": [
+        "old_session"
+      ],
+      "anticache": true,
+      "anticomp": true,
+      "body_patch": {
+        "dry_run": true,
+        "options": {
+          "timeout_ms": 5000
+        }
+      }
+    },
+    {
+      "match_url": [
+        "https://example.invalid/api/form"
+      ],
+      "method": "POST",
+      "http_version": "HTTP/1.1",
+      "url": "https://staging.example.invalid/api/form-v2",
+      "authority": "staging.example.invalid",
+      "urlencoded_form": {
+        "mode": "preview",
+        "scope": [
+          "read",
+          "write"
+        ]
+      },
+      "remove_urlencoded_form": [
+        "obsolete"
+      ]
+    },
+    {
+      "match_url": [
+        "https://example.invalid/api/upload"
+      ],
+      "path_components": [
+        "api",
+        "v2",
+        "upload"
+      ],
+      "multipart_form": {
+        "category": "test"
+      },
+      "remove_multipart_form": [
+        "unused_field"
+      ],
+      "trailers": {
+        "X-Checksum": "demo"
+      },
+      "remove_trailers": [
+        "X-Old-Trailer"
+      ]
+    },
+    {
+      "match_url": [
+        "https://example.invalid/api/raw"
+      ],
+      "path": "/api/raw-override?source=proxy",
+      "body": "{\"override\":true}"
+    },
+    {
+      "match_url": [
+        "https://example.invalid/api/binary"
+      ],
+      "body_base64": "AQIDBA=="
+    }
+  ],
+  "response_modifiers": [
+    {
+      "match_url": [
+        "https://example.invalid/api/demo"
+      ],
+      "status_code": 200,
+      "body_patch": {
+        "example": true
+      }
+    }
+  ]
+}
